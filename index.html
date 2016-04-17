@@ -1,0 +1,197 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="description" content="Rutgers Busses">
+	<meta name="author" content="Renard Tumbokon, Liam Laverty">
+	<title>Rutgers Bus</title>
+	<style type="text/css">
+	#logo{
+		position: fixed;
+		width: 50px;
+		height: 50px;
+		top: 10px;
+		right: 150px;
+		z-index: 10;		
+	}
+	#title{
+		position: fixed;
+		top: -15px;
+		right: 10px;	
+		font-size: 24px;
+		text-align: center;
+		font-weight: bold;
+		z-index: 9;	
+	}	
+	
+	#prompt{
+		font-size: 24px;
+		text-align: center;
+		font-weight: bold;
+		z-index: 8;	
+	}
+	#waitText{
+		display: none;
+		font-size: 24px;
+		text-align: center;		
+		font-weight: bold;
+		z-index: 6;	
+	}
+	#time{
+		display: none;
+		font-size: 24px;
+		text-align: center;	
+		z-index: 7;			
+	}
+	
+	#empty{
+		display: none;
+		position: fixed;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);	
+		z-index: 1;	
+	}
+	#closed{
+		display: none;
+		position: fixed;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		z-index: 1;			
+	}
+	
+	#full{
+		display: none;
+		position: fixed;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);	
+		z-index: 1;	
+	}
+	#outOfBus{
+		display:none; 
+		width: 1200px;
+		height: 1200px;
+		z-index: 0;	
+	}
+
+	</style>
+	<script type="text/javascript">
+		var numLives = 5;	//keep track of behind yellow line presses
+		function findBus(){	//refresh bus
+			var rand = Math.floor((Math.random() * 3) + 1); //between 1-3
+			console.log("rand="+rand);
+			if (rand == 1){	//normal bus
+				document.getElementById('empty').style.display = "inline";
+			}
+			else{	//crowded bus
+				document.getElementById('full').style.display = "inline";
+				document.getElementById('outOfBus').style.display = "inline";
+				
+				var specifiedElement = document.getElementById('full');
+				document.addEventListener('click', function(event) {
+				  var isClickInside = specifiedElement.contains(event.target);
+				  if (isClickInside) {
+					console.log('You clicked inside');
+					//do nothing
+					
+				  } else {	
+					console.log('You clicked outside');
+					busWait();
+				  }
+				});
+			}		
+		}
+		function playSound(){
+			var audio = new Audio('please.wav');
+			audio.play();
+		}	
+		
+		function busGo(){	//bus = empty + correct click
+			var audio = new Audio('go.wav');
+			audio.play();		
+			var minutes = 15; //change minutes of wait here
+			document.getElementById('prompt').style.display = "none";
+			document.getElementById('waitText').style.display = "inline";
+			document.getElementById("waitText").innerHTML = "Time until destination:";
+			document.getElementById('time').style.display = "inline";
+			document.getElementById("time").innerHTML = minutes+":00";
+			countDown(minutes);
+			document.getElementById('full').style.display = "none";
+			document.getElementById('empty').style.display = "none";
+			document.getElementById('closed').style.display = "inline";
+			setTimeout(function(){findBus();}, minutes*60000);	//16 sec audio file, 10 min countdown
+		}
+		
+		function busWait(){	//bus = full + click out
+			var minutes = 10;
+			document.getElementById('outOfBus').style.display = "none";
+			document.getElementById('prompt').style.display = "none";
+			document.getElementById('waitText').style.display = "inline";
+			document.getElementById("waitText").innerHTML = "Time until next bus arrival:";
+			document.getElementById('time').style.display = "inline";
+			document.getElementById("time").innerHTML = minutes+":00";
+			countDown(minutes);
+			document.getElementById('full').style.display = "none";
+			document.getElementById('empty').style.display = "none";
+			document.getElementById('closed').style.display = "none";
+			setTimeout(function(){findBus();}, minutes*60000);	//16 sec audio file, 10 min countdown
+		}
+		
+		function startTimer(duration, display) {
+			var timer = duration, minutes, seconds;
+			setInterval(function () {
+				minutes = parseInt(timer / 60, 10);
+				seconds = parseInt(timer % 60, 10);
+
+				minutes = minutes < 10 ? "0" + minutes : minutes;
+				seconds = seconds < 10 ? "0" + seconds : seconds;
+
+				display.textContent = minutes + ":" + seconds;
+
+				if (--timer < 0) {
+					timer = duration;
+				}
+			}, 1000);
+		}
+
+		function countDown(minutes) {
+			var seconds = 60 * minutes - 1;
+			display = document.querySelector('#time');
+			startTimer(seconds, display);
+		}
+	</script>
+</head>
+
+<body onload="findBus();">
+	<img id="logo" src="logo.png" draggable="false"/>
+	<p id="title">Rutgers Bus<br/>Simulation</p>
+	<p id="prompt">CLICK where you want to sit or stand on the Rutgers bus</p>
+	<p id="waitText">UNDECLARED</p>
+	<span id="time">XX:00</span>
+	
+	<div id="empty">	<!--Empty-->
+		<img id="imgMap" src="busEmpty.jpg"draggable="false" border="0" width="819" height="460" orgWidth="819" orgHeight="460" usemap="#imgMap" alt="" title="CLICK where you want to sit or stand on the bus!"/>
+		<map name="imgMap" id="imgMap">
+			<area shape="poly" coords="96,87,144,88,145,158,159,158,159,276,142,278,139,347,96,348" style="outline:none;" target="_self" onclick="playSound()"/>
+			<area shape="poly" coords="698,81,698,352,213,347,212,276,159,275,159,159,217,158,217,85" style="outline:none;" target="_self" onclick="busGo()"/>
+		</map>
+	</div>
+	
+	<div id="full"> <!--Full capacity-->
+		<img id="imgMapFull" src="busFull.jpg" draggable="false" border="0" width="819" height="460" orgWidth="819" orgHeight="460" usemap="#imgMapFull" alt="" title="CLICK where you want to sit or stand on the bus!" />
+		<map name="imgMapFull">
+			<area shape="poly" coords="96,87,144,88,145,158,159,158,159,276,142,278,139,347,96,348" style="outline:none;" target="_self" onclick="playSound()"/>
+			<area shape="poly" coords="698,81,698,352,213,347,212,276,159,275,159,159,217,158,217,85" style="outline:none;" target="_self" onclick="playSound()"/>
+		</map>
+	</div>
+	
+	<div id="closed"> <!--Driving-->
+		<img id="imgMap" src="busClosed.jpg" draggable="false" border="0" width="819" height="460" orgWidth="819" orgHeight="460" alt="" title="The bus is in motion!" />
+	</div>
+	
+	<div id="outOfBus" onclick="busWait();"></div>
+	
+</body>
+</html>
