@@ -70,12 +70,6 @@
 		transform: translate(-50%, -50%);	
 		z-index: 1;	
 	}
-	#outOfBus{
-		display:none; 
-		width: 1200px;
-		height: 1200px;
-		z-index: 0;	
-	}
 
 	#meme{
 		display: none;
@@ -96,7 +90,6 @@
 			}
 			else{	//crowded bus
 				document.getElementById('full').style.display = "inline";
-				document.getElementById('outOfBus').style.display = "inline";
 				
 				var specifiedElement = document.getElementById('full');
 				document.addEventListener('click', function(event) {
@@ -117,7 +110,6 @@
 			var audio = new Audio('please.wav');
 			audio.play();
 			if (numLives >= 10){
-				document.getElementById('outOfBus').style.display = "none";
 				document.getElementById('prompt').style.display = "none";
 				document.getElementById('full').style.display = "none";
 				document.getElementById('empty').style.display = "none";
@@ -144,7 +136,6 @@
 		
 		function busWait(){	//bus = full + click out
 			var minutes = 10;
-			document.getElementById('outOfBus').style.display = "none";
 			document.getElementById('prompt').style.display = "none";
 			document.getElementById('waitText').style.display = "inline";
 			document.getElementById("waitText").innerHTML = "Time until next bus:";
