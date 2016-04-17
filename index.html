@@ -90,17 +90,7 @@
 				document.getElementById('outOfBus').style.display = "inline";
 				
 				var specifiedElement = document.getElementById('full');
-				document.addEventListener('click', function(event) {
-				  var isClickInside = specifiedElement.contains(event.target);
-				  if (isClickInside) {
-					console.log('You clicked inside');
-					//do nothing
-					
-				  } else {	
-					console.log('You clicked outside');
-					busWait();
-				  }
-				});
+				document.addEventListener('click', isNotDiv());
 			}		
 		}
 		function playSound(){
@@ -126,6 +116,7 @@
 		
 		function busWait(){	//bus = full + click out
 			var minutes = 10;
+			document.getElementById("full").removeEventListener('click', myFunction);
 			document.getElementById('outOfBus').style.display = "none";
 			document.getElementById('prompt').style.display = "none";
 			document.getElementById('waitText').style.display = "inline";
@@ -160,6 +151,15 @@
 			var seconds = 60 * minutes - 1;
 			display = document.querySelector('#time');
 			startTimer(seconds, display);
+		}
+		
+		function isNotDiv(event){
+			  var isClickInside = specifiedElement.contains(event.target);
+			  if (isClickInside) {
+				//do nothing
+			  } else {	
+				busWait();
+			  }
 		}
 	</script>
 </head>
