@@ -104,7 +104,6 @@
 				document.addEventListener('click', function(event) {
 				  var isClickInside = specifiedElement.contains(event.target);
 				  if (isClickInside) {
-					console.log('You clicked inside');
 					//do nothing
 					
 				  } else {	
@@ -118,8 +117,9 @@
 			numLives++; 
 			var audio = new Audio('please.wav');
 			audio.play();
+			console.log('numLives = ' + numLives);
 			if (numLives >= 10){
-				document.getElementById('prompt').style.display = "none";
+				document.getElementById('prompt').style.display = "inline";
 				document.getElementById('full').style.display = "none";
 				document.getElementById('empty').style.display = "none";
 				document.getElementById('closed').style.display = "none";
