@@ -83,6 +83,15 @@
 	<script type="text/javascript">
 		var numLives = 0;	//keep track of behind yellow line presses
 		function findBus(){	//refresh bus
+			numLives = 0;
+			document.getElementById('prompt').style.display = "none";
+			document.getElementById('full').style.display = "none";
+			document.getElementById('empty').style.display = "none";
+			document.getElementById('closed').style.display = "none";
+			document.getElementById('waitText').style.display = "none";
+			document.getElementById('time').style.display = "none";
+			document.getElementById('meme').style.display = "none";
+			
 			var rand = Math.floor((Math.random() * 3) + 1); //between 1-3
 			console.log("rand="+rand);
 			if (rand == 1){	//normal bus
